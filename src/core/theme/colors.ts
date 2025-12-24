@@ -15,6 +15,9 @@ const Colors = {
 
   black: '#000000',
   white: '#FFFFFF',
+  purple:'#CC88EB',
+  buttonbackground:'#7440A0',
+  purpleLight:'#5F1F79',
 };
 
 export default Colors;

@@ -8,13 +8,15 @@ interface User {
 interface AuthState {
   user: User | null;
   hasSeenOnboarding: boolean;
+  language: string | null;
   isLoading: boolean;
 }
 
 const initialState: AuthState = {
   user: null,
   hasSeenOnboarding: false,
-  isLoading: true, // used for splash
+  language: null,          
+  isLoading: true,
 };
 
 const authSlice = createSlice({
@@ -30,12 +32,14 @@ const authSlice = createSlice({
     setOnboardingSeen(state) {
       state.hasSeenOnboarding = true;
     },
+    setLanguage(state, action: PayloadAction<string>) {
+      state.language = action.payload;
+    },
     finishLoading(state) {
       state.isLoading = false;
     },
   },
 });
-
-export const { login, logout, setOnboardingSeen, finishLoading } = authSlice.actions;
+export const { login, logout, setOnboardingSeen, finishLoading,setLanguage } = authSlice.actions;
 
 export default authSlice.reducer;

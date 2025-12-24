@@ -1,36 +1,56 @@
 import React, { useEffect } from 'react';
 import { View, Text, ActivityIndicator, StyleSheet, Image } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { finishLoading } from '../../../auth/state/authSlice';
+import { setLanguage, finishLoading, setOnboardingSeen, } from '../../../auth/state/authSlice';
 import Colors from '../../../../core/theme/colors';
 import i18n from '../../../../core/localization/i18n';
-import { getSavedLanguage } from '../../../../core/localization/languageStorage';
+import { getSavedLanguage, } from '../../../../core/localization/languageStorage';
+import { getOnboardingStatus } from '../../../../core/localization/onboardingStorage';
 
 export default function SplashScreen() {
   const dispatch = useDispatch();
 
 
   useEffect(() => {
+    let isMounted = true;
+
     const init = async () => {
-      const lang = await getSavedLanguage();
-      if (lang) {
-        i18n.locale = lang;
+      const startTime = Date.now();
+
+      // Load data in parallel
+      const [savedLang, onboardingSeen] = await Promise.all([
+        getSavedLanguage(),
+        getOnboardingStatus(),
+      ]);
+
+      if (!isMounted) return;
+
+      if (savedLang) {
+        i18n.locale = savedLang;
+        dispatch(setLanguage(savedLang));
       }
-      dispatch(finishLoading());
+
+      if (onboardingSeen) {
+        dispatch(setOnboardingSeen());
+      }
+
+      // Ensure splash shows for at least 2 seconds
+      const elapsed = Date.now() - startTime;
+      const remaining = Math.max(2000 - elapsed, 0);
+
+      setTimeout(() => {
+        if (isMounted) {
+          dispatch(finishLoading());
+        }
+      }, remaining);
     };
 
     init();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
-
-
-  useEffect(() => {
-    // simulate loading for 2 sec
-    const timeout = setTimeout(() => {
-      /// dispatch(finishLoading());
-    }, 2000);
-
-    return () => clearTimeout(timeout);
-  }, [dispatch]);
 
   return (
     <View style={styles.container}>
@@ -39,7 +59,7 @@ export default function SplashScreen() {
         style={styles.logo}
       />
       <Text style={styles.text}>
-        {"KUEBES"}
+        {i18n.t('splash.appname')}
       </Text>
 
 

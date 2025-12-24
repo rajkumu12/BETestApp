@@ -10,7 +10,7 @@ import OnboardingNavigator from './OnboardingNavigator';
 import SplashScreen from '../../features/splash/presentation/screens/SplashScreen';
 
 export default function RootNavigator() {
-  const { user, hasSeenOnboarding, isLoading } = useSelector(
+  const { user, language, hasSeenOnboarding, isLoading } = useSelector(
     (state: RootState) => state.auth
   );
 
@@ -18,14 +18,25 @@ export default function RootNavigator() {
     return <SplashScreen />;
   }
 
-  if (!hasSeenOnboarding) {
+  // 1️⃣ Language NOT selected yet
+  if (!language) {
     return (
       <NavigationContainer>
-        <OnboardingNavigator />
+        <OnboardingNavigator initialRouteName="Language" />
       </NavigationContainer>
     );
   }
 
+  // 2️⃣ Language selected BUT onboarding not completed
+  if (!hasSeenOnboarding) {
+    return (
+      <NavigationContainer>
+        <OnboardingNavigator initialRouteName="OnboardingMain" />
+      </NavigationContainer>
+    );
+  }
+
+  // 3️⃣ Onboarding done → Auth or Home
   return (
     <NavigationContainer>
       {user ? <ProtectedNavigator /> : <AuthNavigator />}
