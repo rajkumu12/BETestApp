@@ -51,6 +51,9 @@
 	<false/>
 	<key>UIAppFonts</key>
 	<array>
+		<string>mullishextrabold.ttf</string>
+		<string>mullish_regular.ttf</string>
+		<string>mullish_semibold.ttf</string>
 		<string>popinsemibolds.ttf</string>
 		<string>poppingmediun.ttf</string>
 		<string>poppinregular.ttf</string>

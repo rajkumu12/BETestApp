@@ -18,6 +18,13 @@ const Colors = {
   purple:'#CC88EB',
   buttonbackground:'#7440A0',
   purpleLight:'#5F1F79',
+  sendOtpBackground:'#46066E',
+  purleText:'#8144A7',
+  pupledark:'#9B59B6',
+  otpBox:'#E9DBEE',
+  lihtGray:'#5C5B5B',
+  tcbuttonBackground:'#3798DE',
+  blue:'#5F59B6'
 };
 
 export default Colors;

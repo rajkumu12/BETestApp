@@ -12,12 +12,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Colors from '../../../../core/theme/colors';
 import Fonts from '../../../../core/theme/fonts';
 import LinearGradient from 'react-native-linear-gradient';
-import i18n from '../../../../core/localization/i18n';
 import TruecallerDialog from '../../../../core/components/TruecallerDialog';
+import i18n from '../../../../core/localization/i18n';
 
-
-export default function LoginScreen({ navigation }: any) {
+export default function RegisterScreen({ navigation }: any) {
   const [showModal, setShowModal] = useState(false);
+  const [isWhatsappSame, setIsWhatsappSame] = useState(false);
+
   return (
     <LinearGradient
       colors={['#EFE4F7', '#EFE4F7', '#9F71BB', '#874AAD', '#874AAD', '#874AAD']}
@@ -36,18 +37,16 @@ export default function LoginScreen({ navigation }: any) {
           />
           <Text style={styles.appName}>{i18n.t('splash.appname')}</Text>
 
-          {/* TITLE */}
-          <Text style={styles.title}>Welcome back!</Text>
-          <Text style={styles.subtitle}>
-            Sign in to continue your rewards journey
-          </Text>
+          {/* Title */}
+          <Text style={styles.title}>Get Started</Text>
+          <Text style={styles.subtitle}>Create an account to get started</Text>
 
-          {/* INPUTS */}
-          {/* <TextInput
+          {/* FIELDS */}
+          <TextInput
             placeholder="Name"
             placeholderTextColor={Colors.textSecondary}
             style={styles.input}
-          /> */}
+          />
 
           <TextInput
             placeholder="Mobile number"
@@ -56,8 +55,38 @@ export default function LoginScreen({ navigation }: any) {
             style={styles.input}
           />
 
+          {/* WhatsApp Checkbox */}
+          <TouchableOpacity
+            style={styles.checkboxRow}
+            onPress={() => setIsWhatsappSame(prev => !prev)}
+          >
+            <View style={[styles.checkbox, isWhatsappSame && styles.checkboxActive]}>
+              {isWhatsappSame && <View style={styles.tick} />}
+            </View>
+            <Text style={styles.checkboxText}>Whatsapp number</Text>
+          </TouchableOpacity>
+
+          <TextInput
+            placeholder="Email"
+            placeholderTextColor={Colors.textSecondary}
+            keyboardType="email-address"
+            style={styles.input}
+          />
+
+          {/* Gender (dropdown placeholder for now) */}
+          <TouchableOpacity style={styles.dropdown}>
+            <Text style={styles.dropdownText}>Gender</Text>
+            <Text style={styles.dropdownArrow}>▼</Text>
+          </TouchableOpacity>
+
+          <TextInput
+            placeholder="City"
+            placeholderTextColor={Colors.textSecondary}
+            style={styles.input}
+          />
+
           {/* SEND OTP */}
-          <Pressable style={styles.primaryButton} onPress={() => { navigation.navigate('VerifyOtp') }}>
+          <Pressable style={styles.primaryButton} onPress={() => navigation.navigate("VerifyOtp")}>
             <Text style={styles.primaryButtonText}>Send OTP</Text>
           </Pressable>
 
@@ -68,93 +97,130 @@ export default function LoginScreen({ navigation }: any) {
             <View style={styles.line} />
           </View>
 
-          {/* GOOGLE SIGN IN */}
+          {/* TRUECALLER CTA */}
           <Pressable
             style={styles.googleButton}
             onPress={() => setShowModal(true)}
           >
-            {/* TRUECALLER ICON */}
             <Image
               source={require('../../../../assets/images/login/truecallericon.png')}
               style={styles.tcicon}
               resizeMode="contain"
             />
-            <Text style={styles.googleText}>Sign in using Truecaller</Text>
+            <Text style={styles.googleText}>Sign up using Truecaller</Text>
           </Pressable>
 
           {/* FOOTER */}
           <Text style={styles.footerText}>
-            New here?{' '}
-            <Text style={styles.link} onPress={() => navigation.navigate("Register")}>
-              Register now
+            Already a member?{' '}
+            <Text style={styles.link} onPress={() => navigation.navigate("Login")}>
+              Log in
             </Text>
           </Text>
 
         </View>
-
       </SafeAreaView>
+
       <TruecallerDialog
         visible={showModal}
         onClose={() => setShowModal(false)}
         onContinue={() => {
           setShowModal(false);
-          console.log("Truecaller Login Triggered");
+          console.log("Truecaller triggered");
         }}
       />
     </LinearGradient>
   );
 }
 const styles = StyleSheet.create({
-  linearGradient: {
-    flex: 1
-  },
-  safe: {
-    flex: 1,
-  },
-  container: {
-    flex: 1,
+  linearGradient: { flex: 1 },
+  safe: { flex: 1 },
+  container: { flex: 1, alignItems: 'center', paddingHorizontal: 24 },
+  checkboxRow: {
+    width: '85%',
+    flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 24,
+    marginBottom: 12,
+  },
+  checkbox: {
+    width: 18,
+    height: 18,
+    borderRadius: 5,
+    borderWidth: 2,
+    borderColor: Colors.white,
+    marginRight: 10,
+  },
+  checkboxActive: {
+    backgroundColor: Colors.purleText,
+    borderColor: Colors.purleText,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  tick: {
+    width: 8,
+    height: 8,
+    backgroundColor: Colors.white,
+    borderRadius: 2,
+  },
+  checkboxText: {
+    fontFamily: Fonts.mulishSemiBold,
+    fontSize: 14,
+    color: Colors.white,
+  },
+  dropdown: {
+    width: '85%',
+    height:40,
+    backgroundColor: Colors.white,
+    borderRadius: 16,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    marginBottom: 8,
+  },
+  dropdownText: {
+    fontFamily: Fonts.mulishRegular,
+    color: Colors.textSecondary,
+    fontSize: 16,
+  },
+  dropdownArrow: {
+    fontSize: 18,
+    color: Colors.textSecondary,
   },
 
-  logo: {
-    width: 100,
-    height: 100,
-    marginTop: 40,
-  },
+  footerText: { marginTop: 8, fontFamily: Fonts.regular, fontSize: 13, color: Colors.white },
+  link: { color: Colors.themecolor, fontFamily: Fonts.mulishExtraBold, fontSize: 15 },
+  tcicon: { width: 28, height: 28, marginRight: 10 },
   appName: {
     fontFamily: Fonts.semiBold,
     fontSize: 22,
     color: Colors.themecolor,
     marginBottom: 6,
   },
-
-  title: {
+   title: {
     fontFamily: Fonts.mulishExtraBold,
     fontSize: 36,
     color: Colors.themecolor,
   },
-
   subtitle: {
     fontFamily: Fonts.mulishRegular,
     fontSize: 14,
     marginTop: -4,
     color: Colors.themecolor,
-    marginBottom: 32,
+    marginBottom: 12,
   },
 
   input: {
     width: '85%',
-    height: 48,
+    height: 40,
     backgroundColor: Colors.white,
     borderRadius: 16,
     paddingHorizontal: 20,
     fontFamily: Fonts.mulishSemiBold,
     fontSize: 16,
-    marginBottom: 14,
+    marginBottom: 8
   },
-
-  primaryButton: {
+   primaryButton: {
     width: '85%',
     height: 48,
     backgroundColor: Colors.sendOtpBackground,
@@ -173,7 +239,7 @@ const styles = StyleSheet.create({
   orContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 20,
+    marginVertical:8,
     width: '100%',
   },
 
@@ -199,35 +265,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-
-  googleText: {
+   googleText: {
     fontFamily: Fonts.semiBold,
     fontSize: 14,
     color: Colors.purleText,
   },
-
-  footerText: {
-    marginTop: 24,
-    fontFamily: Fonts.regular,
-    fontSize: 13,
-    color: Colors.white,
-  },
-
-  linkContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 8
-    // TouchableOpacity view styles
-  },
-  link: {
-    color: '#320346',
-    fontSize: 15,
-    marginTop: 4,
-    fontFamily: Fonts.mulishExtraBold,
-  },
-  tcicon: {
-    width: 28,
-    height: 28,
-    marginRight: 10,
+  logo: {
+    width: 100,
+    height: 100,
+    marginTop: 20,
   },
 });
